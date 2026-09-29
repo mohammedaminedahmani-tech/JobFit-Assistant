@@ -1,0 +1,9 @@
+node_modules
+dist
+.env
+.env.local
+Dockerfile
+.dockerignore
+README.md
+ATTRIBUTIONS.md
+guidelines
