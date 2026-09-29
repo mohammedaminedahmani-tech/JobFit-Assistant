@@ -9,6 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class JobService {
@@ -18,6 +19,9 @@ public class JobService {
 
     @Autowired
     private RestTemplate restTemplate;
+    
+    @Value("${scraper.url}")
+    private String scraperUrl;
 
     public List<JobOffer> scrapeAndSaveJobs(String query, String location, int page) {
 
@@ -25,7 +29,7 @@ public class JobService {
         int offset = (page - 1) * limit;
 
         String pythonUrl = UriComponentsBuilder
-                .fromHttpUrl("http://localhost:8000/search")
+                .fromHttpUrl(scraperUrl + "/search")
                 .queryParam("q", query)
                 .queryParam("l", location)
                 .queryParam("limit", limit)
