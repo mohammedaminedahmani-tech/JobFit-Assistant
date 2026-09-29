@@ -1,0 +1,21 @@
+services:
+  scraper:
+    build: ./scraper-service
+    image: jobfit-scraper:dev
+
+  backend:
+    build: ./backend-service
+    image: jobfit-backend:dev
+    environment:
+      SCRAPER_URL: http://scraper:8000
+      HUGGINGFACE_API_KEY: ${HUGGINGFACE_API_KEY}
+    depends_on:
+      - scraper
+
+  frontend:
+    build: ./frontend-service
+    image: jobfit-frontend:dev
+    ports:
+      - "3000:8080"
+    depends_on:
+      - backend
