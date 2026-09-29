@@ -1,0 +1,53 @@
+# ===== Deployment : "fais tourner le scraper" =====
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scraper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scraper
+  template:
+    metadata:
+      labels:
+        app: scraper
+    spec:
+      containers:
+        - name: scraper
+          image: jobfit-scraper:dev
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          # Kubernetes vérifie la santé grâce à ton endpoint /health
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+---
+# ===== Service : "donne une adresse fixe au scraper" =====
+apiVersion: v1
+kind: Service
+metadata:
+  name: scraper
+spec:
+  selector:
+    app: scraper
+  ports:
+    - port: 8000
+      targetPort: 8000
