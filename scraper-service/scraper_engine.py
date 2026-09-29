@@ -62,6 +62,10 @@ def search_jobs(keyword: str, location: str, limit: int = 5, offset: int = 0):
         print(f"❌ Erreur: {e}")
         return []
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
 @app.get("/search")
 def search(q: str = "développeur", l: str = "Maroc", limit: int = 5, offset: int = 0):
     return search_jobs(q, l, limit, offset)
