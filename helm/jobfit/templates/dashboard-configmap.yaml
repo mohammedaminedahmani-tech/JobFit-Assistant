@@ -1,0 +1,12 @@
+{{- if .Values.monitoring.dashboard.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jobfit-dashboard
+  namespace: {{ .Values.monitoring.dashboard.namespace }}
+  labels:
+    grafana_dashboard: "1"
+data:
+  jobfit.json: |-
+{{ .Files.Get "dashboards/jobfit.json" | indent 4 }}
+{{- end }}
