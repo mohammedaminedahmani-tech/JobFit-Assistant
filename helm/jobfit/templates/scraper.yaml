@@ -1,10 +1,11 @@
-# ===== Deployment : "fais tourner le scraper" =====
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: scraper
+  labels:
+    app: scraper
 spec:
-  replicas: 1
+  replicas: {{ .Values.scraper.replicas }}
   selector:
     matchLabels:
       app: scraper
@@ -15,32 +16,25 @@ spec:
     spec:
       containers:
         - name: scraper
-          image: jobfit-scraper:dev
-          imagePullPolicy: IfNotPresent
+          image: "{{ .Values.scraper.image.repository }}:{{ .Values.scraper.image.tag }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           ports:
-            - containerPort: 8000
-          # Kubernetes vérifie la santé grâce à ton endpoint /health
+            - containerPort: {{ .Values.scraper.port }}
           readinessProbe:
             httpGet:
               path: /health
-              port: 8000
+              port: {{ .Values.scraper.port }}
             initialDelaySeconds: 3
             periodSeconds: 5
           livenessProbe:
             httpGet:
               path: /health
-              port: 8000
+              port: {{ .Values.scraper.port }}
             initialDelaySeconds: 10
             periodSeconds: 10
           resources:
-            requests:
-              cpu: 50m
-              memory: 64Mi
-            limits:
-              cpu: 250m
-              memory: 256Mi
+            {{- toYaml .Values.scraper.resources | nindent 12 }}
 ---
-# ===== Service : "donne une adresse fixe au scraper" =====
 apiVersion: v1
 kind: Service
 metadata:
@@ -49,5 +43,5 @@ spec:
   selector:
     app: scraper
   ports:
-    - port: 8000
-      targetPort: 8000
+    - port: {{ .Values.scraper.port }}
+      targetPort: {{ .Values.scraper.port }}

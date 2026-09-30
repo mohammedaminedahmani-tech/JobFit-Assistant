@@ -1,0 +1,6 @@
+apiVersion: v2
+name: jobfit
+description: JobFit Assistant - plateforme IA en microservices (React, Spring Boot, FastAPI)
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
