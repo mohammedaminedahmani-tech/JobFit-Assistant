@@ -1,0 +1,28 @@
+resource "kind_cluster" "jobfit" {
+  name           = var.cluster_name
+  wait_for_ready = true
+
+  kind_config {
+    kind        = "Cluster"
+    api_version = "kind.x-k8s.io/v1alpha4"
+
+    node {
+      role = "control-plane"
+
+      # Étiquette pour l'Ingress
+      kubeadm_config_patches = [
+        "kind: InitConfiguration\nnodeRegistration:\n  kubeletExtraArgs:\n    node-labels: \"ingress-ready=true\"\n"
+      ]
+
+      # Ports 80/443 de ton PC vers le cluster
+      extra_port_mappings {
+        container_port = 80
+        host_port      = 80
+      }
+      extra_port_mappings {
+        container_port = 443
+        host_port      = 443
+      }
+    }
+  }
+}
