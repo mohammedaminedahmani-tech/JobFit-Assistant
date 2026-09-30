@@ -44,3 +44,8 @@ ingress:
   className: traefik
 
 imagePullPolicy: IfNotPresent
+
+
+monitoring:
+  serviceMonitor:
+    enabled: true
