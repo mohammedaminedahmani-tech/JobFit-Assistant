@@ -61,3 +61,11 @@ Thumbs.db
 
 # ===== SECRETS =====
 .env
+
+# ===== TERRAFORM =====
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+.terraform.tfstate.lock.info
+terraform/jobfit-config
