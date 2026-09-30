@@ -49,3 +49,6 @@ imagePullPolicy: IfNotPresent
 monitoring:
   serviceMonitor:
     enabled: true
+  dashboard:
+    enabled: true
+    namespace: monitoring
