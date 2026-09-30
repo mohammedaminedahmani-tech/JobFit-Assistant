@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jobfit
+  namespace: argocd
+spec:
+  project: default
+
+  # OÙ trouver l'application : ton dépôt GitHub, branche main, dossier du chart
+  source:
+    repoURL: https://github.com/mohammedaminedahmani-tech/JobFit-Assistant.git
+    targetRevision: main
+    path: helm/jobfit
+
+  # OÙ la déployer : ce cluster, namespace jobfit
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jobfit
+
+  # COMMENT : synchronisation automatique
+  syncPolicy:
+    automated:
+      prune: true     # supprime du cluster ce qui a été supprimé de Git
+      selfHeal: true  # annule les modifications faites à la main dans le cluster
