@@ -2,8 +2,8 @@
 
 scraper:
   image:
-    repository: jobfit-scraper
-    tag: dev
+    repository: ghcr.io/mohammedaminedahmani-tech/jobfit-scraper
+    tag: aa0fd37a154e3fd949f0de74b8eca833324deb9c
   replicas: 1
   port: 8000
   resources:
@@ -12,8 +12,8 @@ scraper:
 
 backend:
   image:
-    repository: jobfit-backend
-    tag: dev
+    repository: ghcr.io/mohammedaminedahmani-tech/jobfit-backend
+    tag: aa0fd37a154e3fd949f0de74b8eca833324deb9c
   replicas: 1
   port: 8080
   # Nom du Secret Kubernetes qui contient HUGGINGFACE_API_KEY
@@ -31,8 +31,8 @@ backend:
 
 frontend:
   image:
-    repository: jobfit-frontend
-    tag: dev
+    repository: ghcr.io/mohammedaminedahmani-tech/jobfit-frontend
+    tag: aa0fd37a154e3fd949f0de74b8eca833324deb9c
   replicas: 1
   port: 8080
   resources:
