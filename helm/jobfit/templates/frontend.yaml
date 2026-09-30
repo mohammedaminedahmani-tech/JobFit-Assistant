@@ -1,10 +1,11 @@
-# ===== Deployment : "fais tourner le frontend (Nginx)" =====
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
+  labels:
+    app: frontend
 spec:
-  replicas: 1
+  replicas: {{ .Values.frontend.replicas }}
   selector:
     matchLabels:
       app: frontend
@@ -15,30 +16,24 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: jobfit-frontend:dev
-          imagePullPolicy: IfNotPresent
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.frontend.port }}
           readinessProbe:
             httpGet:
               path: /
-              port: 8080
+              port: {{ .Values.frontend.port }}
             periodSeconds: 5
           livenessProbe:
             httpGet:
               path: /
-              port: 8080
+              port: {{ .Values.frontend.port }}
             initialDelaySeconds: 5
             periodSeconds: 15
           resources:
-            requests:
-              cpu: 20m
-              memory: 32Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
+            {{- toYaml .Values.frontend.resources | nindent 12 }}
 ---
-# ===== Service : "donne une adresse fixe au frontend" =====
 apiVersion: v1
 kind: Service
 metadata:
@@ -48,4 +43,4 @@ spec:
     app: frontend
   ports:
     - port: 80
-      targetPort: 8080
+      targetPort: {{ .Values.frontend.port }}

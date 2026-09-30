@@ -1,0 +1,46 @@
+# ===== Panneau de contrôle de JobFit Assistant =====
+
+scraper:
+  image:
+    repository: jobfit-scraper
+    tag: dev
+  replicas: 1
+  port: 8000
+  resources:
+    requests: { cpu: 50m, memory: 64Mi }
+    limits: { cpu: 250m, memory: 256Mi }
+
+backend:
+  image:
+    repository: jobfit-backend
+    tag: dev
+  replicas: 1
+  port: 8080
+  # Nom du Secret Kubernetes qui contient HUGGINGFACE_API_KEY
+  # (créé à part, jamais stocké dans ce fichier)
+  existingSecret: jobfit-secrets
+  resources:
+    requests: { cpu: 100m, memory: 256Mi }
+    limits: { cpu: "1", memory: 768Mi }
+  # Autoscaling horizontal (HPA)
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 70
+
+frontend:
+  image:
+    repository: jobfit-frontend
+    tag: dev
+  replicas: 1
+  port: 8080
+  resources:
+    requests: { cpu: 20m, memory: 32Mi }
+    limits: { cpu: 200m, memory: 128Mi }
+
+ingress:
+  enabled: true
+  className: traefik
+
+imagePullPolicy: IfNotPresent
